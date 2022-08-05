@@ -4,14 +4,27 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class ParkingSystem {
+public class ParkingLot {
+
+    public int getTotalNumberOfSlots() {
+        return totalNumberOfSlots;
+    }
 
     private int totalNumberOfSlots;
-    private int noOfCarsAlreadyParked = 0;
+    public int noOfCarsAlreadyParked = 0;
+
+    public HashSet<Vehicle> getParkedCarSet() {
+        return ParkedCarSet;
+    }
+
+    public int NumberOfSlotsAvailable(){
+        return this.totalNumberOfSlots-this.noOfCarsAlreadyParked;
+    }
+
     private HashSet<Vehicle> ParkedCarSet = new HashSet<Vehicle>();
     private List<ParkingLotObserver> lotObserverList=new ArrayList<>();
 
-    public ParkingSystem(int totalNumberOfSlots) {
+    public ParkingLot(int totalNumberOfSlots) {
         this.totalNumberOfSlots = totalNumberOfSlots;
     }
 
@@ -40,7 +53,7 @@ public class ParkingSystem {
         }
     }
 
-    private boolean isSlotAvailable() {
+    public boolean isSlotAvailable() {
         return totalNumberOfSlots - noOfCarsAlreadyParked > 0;
     }
 
