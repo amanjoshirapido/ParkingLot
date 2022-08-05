@@ -96,6 +96,14 @@ public class ParkingSystemTest {
 
         assertEquals(false, parkingOwner.isLotFull);
     }
+
+    @Test
+    public void shouldAllowFirstLotIfAllLotsAreVacant()
+    {
+        ParkingSystem[] parkingSystem;
+        parkingSystem = new ParkingSystem[5];
+        
+    }
 }
 
 
