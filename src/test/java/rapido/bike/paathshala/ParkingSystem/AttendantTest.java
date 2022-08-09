@@ -10,11 +10,11 @@ import static org.junit.Assert.assertEquals;
 public class AttendantTest {
     void fillTheParkingLotFully(ParkingLot parkingLot) {
 
-            for(int index = 0; index<parkingLot.getTotalNumberOfSlots();index++)
-            {
-                Vehicle vehicle = new Vehicle("1237"+index);
-                parkingLot.carParking(vehicle);
-            }
+        for(int index = 0; index<parkingLot.getTotalNumberOfSlots();index++)
+        {
+            Vehicle vehicle = new Vehicle("1237"+index);
+            parkingLot.carParking(vehicle);
+        }
 
     }
 
@@ -89,63 +89,103 @@ public class AttendantTest {
     @Test
     public void shouldParkEvenlyIfThreeCarsAreInQueueAndAllLotsAreEmpty()
     {
-        Attendant attendant = new Attendant(3,3);
+      ParkingOwner parkingOwner = new ParkingOwner("Aman");
+      Attendant attendant = new Attendant(3,3);
+      parkingOwner.useParkingStrategy(attendant,new EvenlyCarDistributionStrategy(attendant.getParkingLots()));
 
-        attendant.parkVehicleEvenly(new Vehicle("UP"+Math.random()));
-        attendant.parkVehicleEvenly(new Vehicle("UP"+Math.random()));
-        attendant.parkVehicleEvenly(new Vehicle("UP"+Math.random()));
-        int[] expectedLotAllocation = new int []{1,1,1};
+      attendant.carPark(new Vehicle("XYZ"));
+      attendant.carPark(new Vehicle("abc"));
+      int carParkedAtLot = attendant.carPark(new Vehicle("DAS"));
 
-        Assert.assertArrayEquals(expectedLotAllocation, attendant.numberOfCarsParkedInEveryLot);
+      assertEquals(3,carParkedAtLot);
+
+
+
     }
     @Test
     public void shouldParkEvenlyIfTwoCarsAreAlreadyParked(){
+        ParkingOwner parkingOwner = new ParkingOwner("Aman");
         Attendant attendant = new Attendant(3,3);
-
+        parkingOwner.useParkingStrategy(attendant,new EvenlyCarDistributionStrategy(attendant.getParkingLots()));
         ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
         parkingLots.get(0).carParking(new Vehicle("XYZ"));
         parkingLots.get(1).carParking(new Vehicle("XYZ"));
-        int[] expectedLotAllocation = new int []{1,1,1};
+        int expectedLotAllocation = 3;
 
-        attendant.parkVehicleEvenly(new Vehicle("UP"));
+        int carParkedAtLot = attendant.carPark(new Vehicle("UP"));
 
-        Assert.assertArrayEquals(expectedLotAllocation, attendant.numberOfCarsParkedInEveryLot);
-    }
-    @Test
-    public void shouldParkEvenlyIfFourCarsAreAlreadyParked(){
-        Attendant attendant = new Attendant(3,3);
-
-        ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
-        parkingLots.get(0).carParking(new Vehicle("XYZ"));
-        parkingLots.get(1).carParking(new Vehicle("XYZ"));
-        parkingLots.get(2).carParking(new Vehicle("XYZ"));
-        parkingLots.get(1).carParking(new Vehicle("ABC"));
-        int[] expectedLotAllocation = new int []{2,2,1};
-
-
-        attendant.parkVehicleEvenly(new Vehicle("UP16"));
-
-
-        Assert.assertArrayEquals(expectedLotAllocation, attendant.numberOfCarsParkedInEveryLot);
+        Assert.assertEquals(expectedLotAllocation, carParkedAtLot);
     }
 
     @Test
     public void shouldParkEvenlyIfTwoCarsAreAlreadyPresentInASingleLotAndRestAreVacant()
     {
+        ParkingOwner parkingOwner = new ParkingOwner("Aman");
         Attendant attendant = new Attendant(3,3);
+        parkingOwner.useParkingStrategy(attendant,new EvenlyCarDistributionStrategy(attendant.getParkingLots()));
         ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
         parkingLots.get(0).carParking(new Vehicle("XYZ"+Math.random()));
         parkingLots.get(0).carParking(new Vehicle("XYZ"+Math.random()));
-        int[] expectedLotAllocation = new int []{2,1,1};
 
-        attendant.parkVehicleEvenly(new Vehicle("UP16"+Math.random()));
-        attendant.parkVehicleEvenly(new Vehicle("UP16"+Math.random()));
+        int expectedLotAllocation = 2;
 
-        Assert.assertArrayEquals(expectedLotAllocation, attendant.numberOfCarsParkedInEveryLot);
+        int carParkedAtLot = attendant.carPark(new Vehicle("UP16"+Math.random()));
+
+        Assert.assertEquals(expectedLotAllocation, carParkedAtLot);
 
 
     }
 
+    @Test
+    public void shouldDirectCarsToLotOneUntilItIsFilled()
+    {
+        Attendant attendant = new Attendant(3,3);
+        int expectedParkedLot = 1;
 
+
+        int lotWhereFirstVehicleIsParked = attendant.carPark(new Vehicle("A"));
+        int lotWhereSecondVehicleIsParked = attendant.carPark(new Vehicle("B"));
+        int lotWhereThirdVehicleIsParked = attendant.carPark(new Vehicle("C"));
+
+        assertEquals(expectedParkedLot,lotWhereFirstVehicleIsParked);
+        assertEquals(expectedParkedLot,lotWhereSecondVehicleIsParked);
+        assertEquals(expectedParkedLot,lotWhereThirdVehicleIsParked);
+
+    }
+
+    @Test
+    public void shouldDirectCarsToLotTwoIfLotOneIsFilled()
+    {
+        Attendant attendant = new Attendant(3,3);
+       ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
+       int expectedParkedLot = 2;
+
+
+        fillTheParkingLotFully(parkingLots.get(0));
+
+        int lotWhereThirdVehicleIsParked = attendant.carPark(new Vehicle("D"));
+
+
+        assertEquals(expectedParkedLot,lotWhereThirdVehicleIsParked);
+
+
+    }
+
+    @Test
+    public void shouldNotAllowToParkIfAllLotsAreFull()
+    {
+        Attendant attendant = new Attendant(2,2);
+        ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
+        fillTheParkingLotFully(parkingLots.get(0));
+        fillTheParkingLotFully(parkingLots.get(1));
+        int expectedParkedLot = -1;
+
+
+        int lotOfFifthVehicleParked = attendant.carPark(new Vehicle("D"));
+
+        assertEquals(expectedParkedLot,lotOfFifthVehicleParked);
+
+
+    }
 
 }

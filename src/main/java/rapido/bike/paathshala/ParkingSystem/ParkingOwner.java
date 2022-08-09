@@ -19,4 +19,8 @@ public class ParkingOwner implements ParkingLotObserver {
     public void notifyForAvailableSlot(){
         isLotFull = false;
     }
+    public void useParkingStrategy(Attendant attendant,ParkingStrategy parkingStrategy)
+    {
+        attendant.setParkingStrategy(parkingStrategy);
+    }
 }

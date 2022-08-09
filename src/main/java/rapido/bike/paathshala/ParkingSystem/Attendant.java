@@ -14,6 +14,8 @@ public class Attendant {
     int numberOfParkingLots;
 
     int lastVehicleParkedAt;
+    ParkingStrategy parkingStrategy;
+
     Attendant(int sizeOfParkingLots,int numberOfParkingLots)
     {
        this.sizeOfParkingLots = sizeOfParkingLots;
@@ -28,6 +30,10 @@ public class Attendant {
        {
            numberOfCarsParkedInEveryLot[index]=0;
        }
+    }
+
+    public void setParkingStrategy(ParkingStrategy parkingStrategy) {
+        this.parkingStrategy = parkingStrategy;
     }
 
     String VehicleAllocatingToLot()
@@ -56,37 +62,10 @@ public class Attendant {
         }
         return "Vehicle Not Present in any lot";
     }
-
-    int findIndexOfMinimumValueInArray(int[] numberOfCarsParkedInEveryLot )
+    int carPark(Vehicle vehicle)
     {
-        int minIndex = 0;
-        int minValue=Integer.MAX_VALUE;
-        for(int index=0;index<numberOfCarsParkedInEveryLot.length;index++)
-        {
+        return  parkingStrategy.parkTheCar(vehicle);
+    }
 
-        if(numberOfCarsParkedInEveryLot[index]<minValue)
-        {
-            minValue = numberOfCarsParkedInEveryLot[index];
-            minIndex=index;
-        }
-
-        }
-        return minIndex;
-    }
-    int [] getUpdatedValueOfAvailableleSlotsInParkingLots(int []numberOfCarsParkedInEveryLot)
-    {
-        for(int index=0;index<numberOfCarsParkedInEveryLot.length;index++)
-        {
-            numberOfCarsParkedInEveryLot[index]=parkingLots.get(index).noOfCarsAlreadyParked;
-        }
-        return numberOfCarsParkedInEveryLot;
-    }
-    void parkVehicleEvenly(Vehicle vehicle)
-    {
-        getUpdatedValueOfAvailableleSlotsInParkingLots(numberOfCarsParkedInEveryLot);
-        int index = findIndexOfMinimumValueInArray(numberOfCarsParkedInEveryLot);
-        parkingLots.get(index).carParking(vehicle);
-        numberOfCarsParkedInEveryLot[index]++;
-    }
 
 }

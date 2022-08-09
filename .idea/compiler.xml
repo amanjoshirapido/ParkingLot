@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="ParkingLot" />
         <module name="ParkingSystem" />
         <module name="ParkingSystem2" />
       </profile>
