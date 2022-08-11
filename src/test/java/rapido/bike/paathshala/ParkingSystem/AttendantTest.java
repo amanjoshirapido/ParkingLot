@@ -23,9 +23,9 @@ public class AttendantTest {
 
         Attendant attendant = new Attendant(5,5);
 
-        String assignedLot = attendant.VehicleAllocatingToLot();
+        int assignedLot = attendant.VehicleAllocatingToLot();
 
-        assertEquals("Slot 1", assignedLot);
+        assertEquals(1, assignedLot);
     }
 
     @Test
@@ -35,9 +35,9 @@ public class AttendantTest {
         ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
         fillTheParkingLotFully(parkingLots.get(0));
 
-        String assignedLot = attendant.VehicleAllocatingToLot();
+        int assignedLot = attendant.VehicleAllocatingToLot();
 
-        assertEquals("Slot 2", assignedLot);
+        assertEquals(2, assignedLot);
 
     }
 
@@ -50,9 +50,9 @@ public class AttendantTest {
         fillTheParkingLotFully(parkingLots.get(1));
 
 
-        String unassignedLot = attendant.VehicleAllocatingToLot();
+        int assignedLot = attendant.VehicleAllocatingToLot();
 
-        assertEquals("Slot not available", unassignedLot);
+        assertEquals(-1, assignedLot);
 
     }
 
@@ -64,9 +64,9 @@ public class AttendantTest {
         ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
         fillTheParkingLotFully(parkingLots.get(0));
 
-        String slotToUnParkFrom = attendant.VehicleDeAllocatingFromLot(vehicle);
+        int slotToUnParkFrom = attendant.VehicleDeAllocatingFromLot(vehicle);
 
-        assertEquals("You can un park from slot 1", slotToUnParkFrom);
+        assertEquals(1, slotToUnParkFrom);
 
 
     }
@@ -79,9 +79,9 @@ public class AttendantTest {
         ArrayList<ParkingLot> parkingLots = attendant.getParkingLots();
         fillTheParkingLotFully(parkingLots.get(0));
 
-        String slotToUnParkFrom = attendant.VehicleDeAllocatingFromLot(vehicle);
+        int slotToUnParkFrom = attendant.VehicleDeAllocatingFromLot(vehicle);
 
-        assertEquals("Vehicle Not Present in any lot", slotToUnParkFrom);
+        assertEquals(-1, slotToUnParkFrom);
 
 
     }

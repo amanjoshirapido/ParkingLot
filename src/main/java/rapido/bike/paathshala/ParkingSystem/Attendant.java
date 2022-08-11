@@ -36,7 +36,7 @@ public class Attendant {
         this.parkingStrategy = parkingStrategy;
     }
 
-    String VehicleAllocatingToLot()
+    int VehicleAllocatingToLot()
     {
         for(int index=0;index<this.parkingLots.size();index++)
         {
@@ -44,23 +44,23 @@ public class Attendant {
             {
                 this.parkingLots.get(index).carParking(new Vehicle("XYZ"+index));
                 numberOfCarsParkedInEveryLot[index]=numberOfCarsParkedInEveryLot[index]+1;
-                return "Slot "+(index+1);
+                return (index+1);
             }
         }
-        return "Slot not available";
+        return -1;
     }
 
-    String VehicleDeAllocatingFromLot(String LicenseNumber)
+    int VehicleDeAllocatingFromLot(String LicenseNumber)
     {
         Vehicle vehicle = new Vehicle(LicenseNumber);
         for(int index=0;index<parkingLots.size();index++)
         {
             if(parkingLots.get(index).getParkedCarSet().contains(vehicle))
             {
-                return "You can un park from slot "+(index+1);
+                return index+1;
             }
         }
-        return "Vehicle Not Present in any lot";
+        return -1;
     }
     int carPark(Vehicle vehicle)
     {
